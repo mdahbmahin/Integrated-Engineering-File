@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html> 
+  <head>
+    <base target="_top">
+    <script>
+    function AddRow()
+    {
+      var firstname = document.getElementById("firstname").value;
+      var lastname = document.getElementById("lastname").value;
+      var address = document.getElementById("address").value;
+      var city = document.getElementById("city").value;
+      var state = document.getElementById("state").value;
+      var zip = document.getElementById("zip").value;
+      google.script.run.AddRecord(firstname, lastname, address, city, state, zip);
+      document.getElementById("firstname").value = '';
+      document.getElementById("lastname").value = '';
+      document.getElementById("address").value = '';
+      document.getElementById("city").value = '';
+      document.getElementById("state").value = '';
+      document.getElementById("zip").value = '';
+    }
+    function LoginUser()
+    {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    
+    google.script.run.withSuccessHandler(function(output) 
+    {
+      if(output == 'TRUE')
+      {
+        document.getElementById("loginDisplay").style.display = "none";
+        document.getElementById("dataDisplay").style.display = "block";     
+      }
+      else if(output == 'FALSE')
+      {
+        document.getElementById("errorMessage").innerHTML = "Failed to Login";     
+      }    
+    }).checkLogin(username, password);
+    }
+    </script>
+
+
+  </head>
+
+  <body>
+
+<nav style=" background: #333;
+               text-align:center;
+               padding:5px;
+               color: white;
+               font-size:25px;
+               font-family: sans-serif;
+               font-weight: bold;">Welcome To Database</nav>
+
+
+<nav style=" background: red;
+               text-align:center;
+               padding:5px;
+               color: white;
+               font-family: sans-serif;
+               font-weight: bold;">Admin Area</nav> 
+
+
+
+<nav style=" background: #333;
+               text-align:center;
+               padding:2px;
+               color: white;
+               font-size:20px;
+               font-family: sans-serif;
+               font-weight: bold;"> <marquee>Cheif ! Welcome To The Data Base.</marquee> </nav>
+
+
+
+
+
+
+<br><br><br><br><br>
+
+
+    
+ <br><br>
+ <center>
+         <div id="loginDisplay" style="background:none;border:5px solid gray;
+                                                 border-radius: 5px;
+                                                 width: 250px;
+                                                 padding-top: 20px;
+                                                 padding-bottom: 25px;
+                                                 padding-left: 20px;
+                                                 padding-right: 20px;" >
+
+
+        <h1 style="margin: -20px -20px 21px;
+                   line-height: 50px;
+                   font-size:25px;
+                   font-weight: bold;
+                   color: white;
+                   font-family: sans-serif;
+                   text-align: center;
+                   text-shadow: 0 0px white;
+                   background: #445055;
+                   border-bottom: 5px solid gray;
+                   border-radius: 0px 0px 0 0;
+                   background-image: -webkit-linear-gradient(top, whiteffd, #eef2f5);
+                   background-image: -moz-linear-gradient(top, whiteffd, #eef2f5);
+                   background-image: -o-linear-gradient(top, whiteffd, #eef2f5);
+                   background-image: linear-gradient(to bottom, whiteffd, #eef2f5);
+                   -webkit-box-shadow: 0 1px whitesmoke;
+                   box-shadow: 0 1px whitesmoke;">Login To Server</h1>
+
+
+
+
+
+
+    <p style="text-align:left; font-family: sans-serif;
+    padding-left:0px;font-weight:bold;">Enter Your Username:</p>
+
+
+    <input type="text" id="username" style="border-top: none;
+                border-right: none;
+                border-left: none;
+                outline: none; 
+                text-align: left;
+                font-size:0.9em ;
+                width: 50%;
+                font-weight:bold; 
+                margin: 0px;
+                padding: 0 25px;
+                width: 200px;
+                height: 34px;
+                color: #404040;
+                background: white;
+                border: 1px solid;
+                border-color: #c4c4c4 #d1d1d1 #d4d4d4;
+                border-radius: 2px;
+                outline: 5px solid #eff4f7;
+                -moz-outline-radius: 3px;
+                -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);"/>
+
+
+                         
+
+
+
+    <p style="text-align: left;font-family: sans-serif;
+    padding-left:0px;font-weight:bold;">Enter Your Password:</p>
+
+                         
+    <input type="password" id="password" style="border-top: none;
+                border-right: none;
+                border-left: none;
+                outline: none; 
+                text-align: left;
+                font-size:0.9em ;
+                width: 50%;
+                font-weight:bold;
+                margin: 2px;
+                padding: 0 25px;
+                width: 200px;
+                height: 34px;
+                color: #404040;
+                background: white;
+                border: 1px solid;
+                border-color: #c4c4c4 #d1d1d1 #d4d4d4;
+                border-radius: 2px;
+                outline: 5px solid #eff4f7;
+                -moz-outline-radius: 3px;
+                -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);"/>
+
+
+                <br><br>
+
+
+                 <label>
+                    <input type="checkbox" name="remember_me" id="remember_me">
+                     Remember me on this computer
+                 </label>
+             
+      
+      <br><br>
+
+    <input type="button" value="Login" onclick="LoginUser()"  style="float: center;padding-             top: 3px;
+                 padding-bottom: 3px;
+                 padding-left: 80px;
+                 padding-right: 80px;
+                 font-size: 1.2em;
+                 font-weight:bold;"/><br>
+
+    <span id="errorMessage" style="color: red" ></span>
+
+
+
+
+
+
+
+
+       </div>
+
+</center>
+
+
+
+
+
+<br>
+
+
+
+
+
+  <div style="display:none"  id="dataDisplay"  >
+
+ <center>
+         <table border="2"> 
+            
+            <tr><td><b>First Name : </b></td>
+             <td><input type="text" id="firstname" /></td>
+            </tr>
+
+
+            <tr><td><b>Last Name : </b></td>
+             <td><input type="text" id="lastname" /></td>
+            </tr>
+
+
+            <tr><td><b>Street Address : </b></td>
+             <td><input type="text" id="address" /></td>
+            </tr>
+
+
+
+            <tr><td><b>City : </b></td>
+             <td><input type="text" id="city" /></td>
+            </tr>
+
+
+
+            <tr><td><b>State : </b></td>
+             <td><input type="text" id="state" /></td>
+            </tr>
+
+
+
+            <tr><td><b>Zip : </b></td>
+             <td><input type="text" id="zip" /></td>
+            </tr>
+
+
+
+  
+         </table>
+ <br><br>
+
+    <input type="button" value="Update" onclick="AddRow()" />
+
+
+    </center>
+  </div>
+
+
+
+
+
+
+<div class="footer" style="position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: #333;
+   color: white;
+   text-align: center;">
+  <p style="font-family: sans-serif;">Developement &copy copyright ; Ahb Mahin Hossain</p>
+</div>
+
+
+
+
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
