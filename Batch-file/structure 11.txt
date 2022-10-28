@@ -1,0 +1,7 @@
+md weekdays/ saturday
+md weekdays/ sunday
+md weekdays/ mondayday
+md weekdays/ tuesday
+md weekdays/ wednesdayday
+md weekdays/ thursday
+md weekdays/ fridayday

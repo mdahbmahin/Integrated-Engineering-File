@@ -1,0 +1,8 @@
+@echo off
+setlocal enabledelayedexpansion
+for %%a in (*.*) do (
+   set "filespec=%%a"
+   set "ext=%%~xa"
+   md "!filespec:~0,8!\!filespec:~8,4!\!ext:~1!" 2>nul
+   move "%%a" "!filespec:~0,8!\!filespec:~8,4!\!ext:~1!" >nul
+)

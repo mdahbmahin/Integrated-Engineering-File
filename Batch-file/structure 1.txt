@@ -1,0 +1,56 @@
+- Main folder
+   - Sub folder A
+      - Sub folder 1
+      - Sub folder 2
+      - Sub folder 3
+      - Sub folder 4 
+   - Sub folder B
+      - Sub folder 1
+      - Sub folder 2
+      - Sub folder 3
+      - Sub folder 4 
+   - Sub folder C
+      - Sub folder 1
+      - Sub folder 2
+      - Sub folder 3
+      - Sub folder 4
+
+
+
+
+
+
+
+
+
+
+@ECHO ON
+SET RootDir=C:\Main
+SET SubA=A,B,C,D,E
+SET SubB=1,2,3,4,5
+FOR %%A IN (%SubA%) DO FOR %%B IN (%SubB%) DO IF NOT EXIST "%RootDir%\%%~A\%%~B" MD "%RootDir%\%%~A\%%~B"
+EXIT
+
+
+
+
+
+
+Main Folder 
+     Sub Folder A
+        Sub Folder 1
+        [...]
+        Sub Folder 4
+     Sub Folder B 
+        Sub folder 1 
+        [...]
+        Sub Folder 4 
+     [...]
+
+
+
+
+
+
+
+

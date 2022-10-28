@@ -1,0 +1,22 @@
+@echo off
+cls
+echo Cmd is generating a random number between 1 and 20
+echo This may take a moment. . .
+:loop
+set num=%random%
+if /i %num% GTR 20 goto loop
+if /i %num% LSS 1 goto loop
+goto finish
+:finish
+cls
+echo Cmd chose the number %num%
+set count=1
+:loop1
+echo %count%
+if %count% EQU %num% goto finish1
+echo %random% > %random%.txt
+set /a count+=1
+goto loop1
+:finish1
+pause >nul
+exit

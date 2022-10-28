@@ -1,0 +1,14 @@
+@ECHO OFF
+SETLOCAL ENABLEDELAYEDEXPANSION
+SET "sourcedir=c:\sourcedir"
+SET "destdir=c:\destdir"
+FOR /f "delims=" %%a IN (
+  'dir /b /a-d "%sourcedir%\*" '
+ ) DO (
+ SET name=%%~na
+ SET ext=%%~xa
+ SET name=!name:~0,8!\!name:~8,4!\!ext:~1!
+ ECHO MD "%destdir%\!name!"
+ ECHO MOVE "%sourcedir%\%%a" "%destdir%\!name!\"
+)
+GOTO :EOF
