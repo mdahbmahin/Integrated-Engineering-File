@@ -1,0 +1,472 @@
+<HTML>
+<HEAD>
+<TITLE>Hard Block</TITLE>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+var timerID = null
+var INT = 35
+var loadFLG=0
+var gameFLG=0
+var missFLG=0
+var tim = 0                                    //time
+var blcol = new Array(5)                       //block color
+var blsta = new Array(40)                      //block status
+var blclr = 0                                  //clear block
+var ballX = 0                                  //ball data
+var ballY = 0
+var ballN = 3
+var ballDX= 0
+var ballDY= 0
+var tmpRL = 193
+var keyP=0
+var keyPr=0
+var endFLG=0
+
+blcol[0]="#FFFF00"
+blcol[1]="#FFB000"
+blcol[2]="#FF8000"
+blcol[3]="#FF4000"
+blcol[4]="#FF0000"
+blcol[5]="#000000"
+
+var ieFLG=0
+var n4FLG=0
+if (document.all){
+ ieFLG=1
+}else{
+ if (document.getElementById){
+  n4FLG=0
+ }else{
+  n4FLG=1
+ }
+}
+
+
+//-----------------------------------------
+//------------- main function -------------
+//-----------------------------------------
+
+function mainF(){
+ clearTimeout(timerID)
+ tim=tim+1
+ with (Math){tmptim=floor(tim/10)}
+ tmptc=""
+ tmptb=tim/10
+ if (tim==tmptim*10){tmptc=".0"}
+ ballX=ballX+ballDX
+ ballY=ballY+ballDY
+ outCHK()
+ blkCHK()
+ if (document.getElementById){
+  document.SC.TM.value=tmptb+tmptc
+  document.SC.CL.value=blclr
+  document.SC.SR.value=blclr*200-tim
+  document.getElementById("ball").style.top =  ballY
+  document.getElementById("ball").style.left = ballX
+ }else{
+  if (ieFLG==1){
+   document.SC.TM.value=tmptb+tmptc
+   document.SC.CL.value=blclr
+   document.SC.SR.value=blclr*200-tim
+   ball.style.posTop = ballY
+   ball.style.posLeft = ballX
+  }else{
+   document.layers["info"].document.forms[0].TM.value=tmptb+tmptc
+   document.layers["info"].document.forms[0].CL.value=blclr
+   document.layers["info"].document.forms[0].SR.value=blclr*200-tim
+   document.layers["ball"].moveTo(ballX,ballY)
+  }
+ }
+ racketMove()
+ if (gameFLG==1){timerID = setTimeout("mainF()",INT)}
+}
+
+
+//-----------------------------------------
+//------------- sub functions -------------
+//-----------------------------------------
+
+//game init
+function initG(){
+  keyP=0
+ if (endFLG == 0){
+  endFLG=1
+  blclr=0
+  tim=0
+  ballN=3
+  with (Math){tmptim=floor(tim/10)}
+  if (document.getElementById){
+   document.SC.TM.value=tmptim
+   document.getElementById("ovrmes").style.top=-1000
+   document.getElementById("clrmes").style.top=-1000
+  }else{
+   if (ieFLG==1){
+    document.SC.TM.value=tmptim
+    clrmes.style.top=-1000
+    ovrmes.style.top=-1000
+   }else{
+    document.layers["info"].document.forms[0].TM.value=tmptim
+    document.layers["ovrmes"].visibility="HIDE"
+    document.layers["clrmes"].visibility="HIDE"
+   }
+  }
+  for (ib=0; ib<5; ib++){for (ia=0; ia<8; ia++){
+   tmpIDn=ib*8+ia+1
+   if (document.getElementById){
+    document.getElementById(tmpIDn).style.backgroundColor = blcol[ib]
+   }else{
+    if (ieFLG==1){
+     document.all(tmpIDn+9).style.backgroundColor = blcol[ib]
+    }else{
+     document.layers[tmpIDn].bgColor=blcol[ib]
+    }
+   }
+   blsta[ib*8+ia]=ib
+  }}
+ }
+ if (document.getElementById){
+  document.SC.BL.value=ballN
+  document.getElementById("starter").style.top=-1000
+ }else{
+  if (ieFLG==1){
+   document.SC.BL.value=ballN
+   starter.style.top=-1000
+  }else{
+   document.layers["info"].document.forms[0].BL.value=ballN
+   document.layers["starter"].visibility="HIDE"
+  }
+ }
+ gameFLG=1;loadFLG=1
+ ballX=209;ballY=270;ballDX=-8;ballDY=-8;tmpRL=193;missFLG=0
+ timerID = setTimeout("mainF()",INT)
+}
+
+
+function keyDown(DnEvents){
+ if (ieFLG==0){
+  k=DnEvents.which
+ }else{
+  k=window.event.keyCode
+ }
+
+  if (k == 54){keyP=5}                         //6
+  if (k == 102){keyP=5}                        //6
+
+  if (k == 52){keyP=-5}                        //4
+  if (k == 100){keyP=-5}                       //4
+
+  if (k == 83){if (gameFLG==0){initG()}}       //S
+  if (k == 115){if (gameFLG==0){initG()}}      //s
+}
+
+function keyUp(UpEvents){
+ if (ieFLG==0){
+  k=UpEvents.which
+ }else{
+  k=window.event.keyCode
+ }
+  if (k == 102){keyP=0}                   //6
+  if (k == 54 ){keyP=0}                   //4
+  if (k == 100){keyP=0}                   //6
+  if (k == 52 ){keyP=0}                   //4
+}
+
+
+//racket move
+function racketMove(){
+ if (loadFLG==1){
+  if (keyP != 0){
+   tmpkeyP=keyP*keyPr
+   if (tmpkeyP>=0){
+    if (keyPr != 0){
+     if (Math.abs(keyPr)<15){keyPr=keyPr*1.2}
+    }else{
+     keyPr=keyP
+    }
+   }else{
+   keyPr=keyP
+   }
+  }else{
+   keyPr=0
+  }
+  tmpRL=tmpRL+keyPr
+  if (tmpRL<16){tmpRL=16}
+  if (tmpRL>370){tmpRL=370}
+  if (document.getElementById){
+   document.getElementById("racket").style.left=tmpRL
+  }else{
+   if (ieFLG==1){
+    racket.style.left=tmpRL
+   }else{
+    document.layers["racket"].left=tmpRL
+   }
+  }
+ }
+}
+
+//wall and racket check
+function outCHK(){
+ if (ballX < 16){ballX=32-ballX;ballDX=-ballDX}
+ if (ballX > 401){ballX=802-ballX;ballDX=-ballDX}
+ if (ballY < 16){ballY=32-ballY;ballDY=-ballDY}
+ if (ballY >= 272){
+  if (missFLG==0){
+   tmpX=(ballDX/ballDY)*(272-ballY)+ballX
+   if (tmpX >= tmpRL-12){
+    if (tmpX <= tmpRL+42){
+     ballY=272;ballDY=-ballDY
+     ballX=tmpX
+     ballRD=tmpX-tmpRL
+     with (Math){ballDX=8*abs(ballDX)/ballDX}
+     if (ballRD<-4){ballDX=-15}
+     if (ballRD>36){ballDX=15}
+     if (ballRD>=14){if (ballRD<=16){ballDX=-2}}
+     if (ballRD>=17){if (ballRD<=20){ballDX=2}}
+     if (ballRD>=0){if (ballRD<=4){ballDX=-4}}
+     if (ballRD>=28){if (ballRD<=32){ballDX=4}}
+     if (ballRD>=-4){if (ballRD<=-1){ballDX=-11}}
+     if (ballRD>=33){if (ballRD<=36){ballDX=11}}
+    }
+   }
+  if (ballDY>0){missFLG=1}
+  }else{
+  if (ballY>290){missFLG=0;ballN=ballN-1;gameEnd()}
+  }
+ }
+}
+
+//block check
+function blkCHK(){
+ tmpY=ballY+4;tmpX=ballX+4
+ if (tmpY>=48){if (tmpY<=147){if (tmpX>=29){if (tmpX<=396){
+  with (Math) {
+   ia=floor((tmpX-29)/46);ib=floor((tmpY-48)/20);ic=ib*8+ia
+  }
+  if (blsta[ic]<=4){
+   tmpbc=blsta[ic]+1
+   blsta[ic]=tmpbc
+   tmpIDnc=ic+1
+   if (document.getElementById){
+    document.getElementById(tmpIDnc).style.backgroundColor = blcol[tmpbc]
+   }else{
+    if (ieFLG==1){
+     document.all(tmpIDnc+9).style.backgroundColor = blcol[tmpbc]
+    }else{
+     document.layers[tmpIDnc].bgColor=blcol[tmpbc]
+    }
+   }
+   if (tmpbc==5){blclr=blclr+1}
+   if (blclr >= 40){gameEnd()}
+
+   if (ballDX>0){
+    iy=(ballDY/ballDX)*(29+46*ia-tmpX)+tmpY
+    if (iy>48+20*ib+18){
+     tmpY1=48+20*ib+18
+     tmpX1=(ballDX/ballDY)*(48+20*ib+18-tmpY)+tmpX  
+     ballX=tmpX1-4;ballY=tmpY1-4
+     ballDY=-ballDY
+    }else{
+     if (iy<44+20*ib){
+      tmpY1=48+20*ib
+      tmpX1=(ballDX/ballDY)*(48+20*ib-tmpY)+tmpX  
+      ballX=tmpX1-4;ballY=tmpY1-4
+      ballDY=-ballDY
+     }else{
+      tmpX1=29+46*ia
+      tmpY1=(ballDY/ballDX)*(29+46*ia-tmpX)+tmpY
+      ballX=tmpX1-4;ballY=tmpY1-4
+      ballDX=-ballDX
+     }
+    }
+   }else{
+    iy=(ballDY/ballDX)*(29+46*ia+44-tmpX)+tmpY
+    if (iy>48+20*ib+18){
+     tmpY1=48+20*ib+18
+     tmpX1=(ballDX/ballDY)*(48+20*ib+18-tmpY)+tmpX  
+     ballX=tmpX1-4;ballY=tmpY1-4
+     ballDY=-ballDY
+    }else{
+     if (iy<44+20*ib){
+      tmpY1=48+20*ib
+      tmpX1=(ballDX/ballDY)*(48+20*ib-tmpY)+tmpX  
+      ballX=tmpX1-4;ballY=tmpY1-4
+      ballDY=-ballDY
+     }else{
+      tmpX1=29+46*ia+44
+      tmpY1=(ballDY/ballDX)*(29+46*ia+44-tmpX)+tmpY
+      ballX=tmpX1-4;ballY=tmpY1-4
+      ballDX=-ballDX
+     }
+    }
+   }
+
+  }
+ }}}}
+}
+
+//game end
+function gameEnd(){
+ gameFLG=0
+ loadFLG=0
+ if (document.getElementById){
+  document.SC.BL.value=ballN
+  document.getElementById("starter").style.top=200
+  if (blclr >= 40){
+   document.getElementById("clrmes").style.top=150
+   endFLG=0
+  }
+  if (ballN <= 0){
+   document.getElementById("ovrmes").style.top=160
+   endFLG=0
+  }
+ }else{
+  if (ieFLG==1){
+   document.SC.BL.value=ballN
+   starter.style.top=200
+   if (blclr >= 40){
+    clrmes.style.top=150
+    endFLG=0
+   }
+   if (ballN <= 0){
+    ovrmes.style.top=160
+    endFLG=0
+   }
+  }else{
+   document.layers["info"].document.forms[0].BL.value=ballN
+   document.layers["starter"].visibility="SHOW"
+   if (blclr >= 40){
+    document.layers["clrmes"].visibility="SHOW"
+    endFLG=0
+   }
+   if (ballN <= 0){
+    document.layers["ovrmes"].visibility="SHOW"
+    endFLG=0
+   }
+  }
+ }
+}
+
+//Event init
+function onLD(){
+ document.onkeydown = keyDown
+ document.onkeyup = keyUp
+
+ if (document.getElementById){
+  document.getElementById("starter").style.top=200
+  document.getElementById("info").style.top=16
+ }else{
+  if (ieFLG==1){
+   starter.style.top=200
+   info.style.top=16
+  }else{
+   document.layers["starter"].visibility="SHOW"
+  }
+ }
+ if (n4FLG!=0){document.captureEvents(Event.KEYDOWN|Event.KEYUP)}
+}
+
+//-->
+</SCRIPT>
+</HEAD>
+
+
+<BODY BGCOLOR="#DEB887" ONLOAD="onLD()"">
+<A NAME="t0">
+<DIV ID="gamewindow" STYLE="position:absolute; background-color:#000000; top:16px; left:16px; width:394px; height:300px"><LAYER CLIP="0,0,393,299" BGCOLOR="#000000"></LAYER></DIV>
+
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+//block layer write
+
+for (ib=0; ib<5; ib++){
+ for (ia=0; ia<8; ia++){
+  tmpL=31+46*ia;tmpT=50+20*ib
+  tmpIDn=ib*8+ia+1
+  if (n4FLG!=1){
+   document.write("<DIV ID='"+tmpIDn+"' STYLE='position:absolute; background-color:"+blcol[ib]+"; top:"+tmpT+"px; left:"+tmpL+"px; width:42; height:16; clip:rect(0,43,17,0)'></DIV>")
+  }else{
+   document.write("<LAYER LEFT="+tmpL+" TOP="+tmpT+" CLIP='1,1,43,17' BGCOLOR='"+blcol[ib]+"'></LAYER>")
+  }
+  blsta[ib*8+ia]=ib
+ }
+}
+//-->
+</SCRIPT>
+
+
+<DIV ID="ball" STYLE="position:absolute; top:270px; left:209px; width:8px; height:8px">
+ <DIV STYLE="position:absolute; top:0px; left:2px; background-color:#B0B0B0; width:4; height:8; clip:rect(0,3,7,0)"></DIV>
+ <DIV STYLE="position:absolute; top:2px; left:0px; background-color:#B0B0B0; width:8; height:4; clip:rect(0,7,3,0)"></DIV>
+ <DIV STYLE="position:absolute; top:1px; left:1px; background-color:#FFFFFF; width:6; height:6; clip:rect(0,5,5,0)"></DIV>
+</DIV>
+
+<DIV ID="racket" STYLE="position:absolute; top:280px; left:193px; background-color:#B0B0FF; width:40px; height:4px; clip:rect(0,39,3,0)"></DIV>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+if (n4FLG==1){
+ document.write('<LAYER NAME="ball" LEFT="209" TOP="270" CLIP="0,0,7,7"> <LAYER LEFT="2" TOP="0" CLIP="0,0,3,7" BGCOLOR="#B0B0B0"></LAYER><LAYER LEFT="0" TOP="2" CLIP="0,0,7,3" BGCOLOR="#B0B0B0"></LAYER><LAYER LEFT="1" TOP="1" CLIP="0,0,5,5" BGCOLOR="#FFFFFF"></LAYER></LAYER><LAYER NAME="racket" LEFT="193" TOP="280" CLIP="0,0,39,3" BGCOLOR="#B0B0FF"></LAYER><LAYER NAME="info" LEFT="416" TOP="16">')
+}else{
+ document.write('<DIV ID="info" STYLE="position:absolute; top:-1000px; left:416px">')
+}
+//-->
+</SCRIPT>
+
+<FONT STYLE="font-size:22px; color:#000044"><I><B>HARD BLOCK </B></I></FONT>
+
+<BR><P>
+<FORM NAME="SC">
+BALL :<INPUT TYPE="text" NAME="BL" SIZE=5 VALUE = "3" ><BR>
+TIME :<INPUT TYPE="text" NAME="TM" SIZE=5 VALUE = "0" ><BR>
+BLOCK:<INPUT TYPE="text" NAME="CL" SIZE=5 VALUE = "0" ><BR>
+SCORE:<INPUT TYPE="text" NAME="SR" SIZE=5 VALUE = "0" ><BR>
+<P><BR>
+</FORM>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+if (n4FLG==1){
+ document.write('</LAYER><LAYER NAME="clrmes" TOP=150 LEFT=160 visibility="HIDE">')
+}else{
+ document.write('</DIV><DIV ID="clrmes" STYLE="position:absolute; top:-1000px; left:160px; visibility:visible">')
+}
+//-->
+</SCRIPT>
+
+
+<FONT STYLE="font-size:24px" COLOR="#44CC44">ALL CLEAR!</FONT>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+if (n4FLG==1){
+ document.write('</LAYER><LAYER NAME="ovrmes" TOP=150 LEFT=160 visibility="HIDE">')
+}else{
+ document.write('</DIV><DIV ID="ovrmes" STYLE="position:absolute; top:-1000px; left:160px; visibility:visible">')
+}
+//-->
+</SCRIPT>
+
+
+<FONT STYLE="font-size:24px" COLOR="#CC4444">GAME OVER!</FONT>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+if (n4FLG==1){
+ document.write('</LAYER><LAYER NAME="starter" TOP=200 LEFT=180 visibility="HIDE"><FONT COLOR="#FFFFFF">')
+}else{
+ document.write('</DIV><DIV ID="starter" STYLE="position:absolute; top:-1000px; left:180px; color:#FFFFFF; visibility:visible">')
+}
+//-->
+</SCRIPT>
+
+Left  = 4 key<BR>
+Right = 6 key<BR>
+START = S key
+
+
+</SCRIPT>
+
+
+</BODY>
+</HTML>
+
